@@ -1,9 +1,9 @@
-﻿using CurrencyApiLib.Dtos.CurrencyRate;
+﻿using CurrencyApi.HttpClient;
+using CurrencyApiLib.Dtos.CurrencyRate;
 using CurrencyApiLib.Services.CurrencyRate.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
-namespace CurrencyApiLib.Controllers.Book
+namespace CurrencyApiLib.Controllers.CurrencyExchange
 {
 
     [Route("api/[controller]/[action]")]
@@ -11,49 +11,49 @@ namespace CurrencyApiLib.Controllers.Book
     //[Authorize(Roles = "Admin")]
     public class CurrencyRatesController : ControllerBase
     {
-        const string apiKey = "93ae23f11c432de09b438c96";
         private readonly ICurrencyRateService _currencyRateService;
         private ExternalAPI externalAPI;
         private readonly IConfiguration Configuration;
-        public CurrencyRatesController(ICurrencyRateService currencyRateService, IConfiguration configuration)
+        private readonly ILogger _logger;
+        private CurrencyRateDto data = new CurrencyRateDto();
+        public CurrencyRatesController(ICurrencyRateService currencyRateService, IConfiguration configuration, ILogger logger)
         {
             _currencyRateService = currencyRateService;
+            _logger = logger;
+
+            externalAPI = new ExternalAPI();
             Configuration = configuration;
-            Configuration.GetSection("ExternalApi").Bind(externalAPI);
+            Configuration.GetSection("ExternalAPI").Bind(externalAPI);
         }
 
         [HttpGet]
         public Task<CurrencyRates> GetExternalCurrencyRatesAsync()
         {
-            CurrencyRateDto data = new CurrencyRateDto();
             try
             {
-                //Would of used RestSharp client
-                //string URLString = string.Format(externalAPI.url, externalAPI.apiKey);
-                string URLString = $"https://v6.exchangerate-api.com/v6/{apiKey}/latest/USD";
-                using (var webClient = new System.Net.WebClient())
-                {
-                    var json = webClient.DownloadString(URLString);
-                    data = JsonConvert.DeserializeObject<CurrencyRateDto>(json);
+                data = WebClient.Request(externalAPI.Url, externalAPI.ApiKey);
 
-                    //Save to MySQL table here
-                    //await _currencyRateService.CurrencyRateSaveAsync(data);
+                var url = string.Format(externalAPI.Url, externalAPI.ApiKey);
 
-                    return Task.FromResult(data.conversion_rates);
-                }
+                _logger.LogInformation($"The GetExternalCurrencyRatesAsync request executed successfully on url: {url}");
+
+                return Task.FromResult(data.conversion_rates);
             }
             catch (Exception ex)
             {
-                return Task.FromResult(data.conversion_rates);
+                //log error
+                _logger.LogError(ex, "The GetExternalCurrencyRatesAsync request failed");
             }
 
+            return null;
         }
 
     }
 
     public class ExternalAPI
     {
-        public string url { get; set; }
-        public string apiKey { get; set; }
+        public const string Name = "ExternalAPI";
+        public string Url { get; set; }
+        public string ApiKey { get; set; }
     }
 }
