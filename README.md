@@ -5,6 +5,8 @@
 # Instructions
 1. MySQL connection string needs to be updated in the appsettings file to point to your connection instance.
 2. I have registered with an exchange rates api to consume and I have my apiKey integrated to do the service calls.
+   ![image](https://github.com/user-attachments/assets/ef25a91c-6ce3-42e6-b577-02d9d072406f)
+
 
 Implemented a CLEAN style approach without Mediator and CQRS patterns.
 
