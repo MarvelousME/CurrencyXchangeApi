@@ -1,10 +1,14 @@
 ﻿using CurrencyApiDomain.UnitOfWorks;
 using CurrencyApiInfrastructure.MapperConfigurations;
 using CurrencyApiInfrastructure.Repositories;
+using CurrencyApiInfrastructure.Entities;
 using CurrencyApiLib.Dtos.CurrencyRate;
 using CurrencyApiLib.Services.CurrencyRate.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CurrencyApiLib.Services.CurrencyRate.Classes
 {
@@ -13,20 +17,60 @@ namespace CurrencyApiLib.Services.CurrencyRate.Classes
         private readonly ICurrencyRateRepo _currencyRatesRepo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICustomMapper _mapper;
+        private readonly ILogger _logger;
 
-        public CurrencyRateService(ICurrencyRateRepo currencyRatesRepo, IUnitOfWork unitOfWork, ICustomMapper customMapper)
+        public CurrencyRateService(ICurrencyRateRepo currencyRatesRepo, IUnitOfWork unitOfWork, ICustomMapper customMapper, ILogger<CurrencyRateService> logger)
         {
             _currencyRatesRepo = currencyRatesRepo;
             _unitOfWork = unitOfWork;
             _mapper = customMapper;
+            _logger = logger;
         }
 
-        public Task<int> CurrencyRateSaveAsync(CurrencyRateDto dto)
+        public async Task<List<CurrencyRates>> GetAllCurrencyRatesFromDbAsync()
         {
-            //Save to db here
-            //_currencyRatesRepo.InsertAsync(dto);
-            //_currencyRatesRepo.SaveChanges();
-            return Task.FromResult(1);
+            string message = string.Empty;
+            try
+            {
+                var data = _currencyRatesRepo.GetData().ToList();
+                var list = _mapper.Map<List<CurrencyApiInfrastructure.Entities.CurrencyRate>, List<CurrencyRates>>(data);
+                
+                message = "Successfully retrieved records from database";
+                _logger.LogInformation(message);
+
+                return await Task.FromResult(list);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving records to the database");
+            }
+
+            message = "Error retrieving records to the database";
+            _logger.LogError(message);
+
+            return null;
+        }
+
+        public async Task<string> CurrencyRatesSaveToDbAsync(CurrencyRates dto)
+        {
+            string message = string.Empty;
+            try
+            {
+                var row = _mapper.Map<CurrencyRates, CurrencyApiInfrastructure.Entities.CurrencyRate>(dto);
+
+                await _currencyRatesRepo.InsertAsync(row);
+                _currencyRatesRepo.SaveChanges();
+
+                message = "Saved to database successfully";
+                return await Task.FromResult(message);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error saving record to the database");
+            }
+
+            message = "Failed to save record to database.";
+            return await Task.FromResult(message);
         }
 
         public Task DeleteCurrencyRatesAsync(DeleteCurrencyRateDto dto)

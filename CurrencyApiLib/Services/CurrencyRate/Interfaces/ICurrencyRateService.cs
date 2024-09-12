@@ -1,5 +1,6 @@
 ﻿using CurrencyApiInfrastructure.BaseInterfaces;
 using CurrencyApiLib.Dtos.CurrencyRate;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CurrencyApiLib.Services.CurrencyRate.Interfaces
@@ -11,7 +12,7 @@ namespace CurrencyApiLib.Services.CurrencyRate.Interfaces
         /// </summary>
         /// <param name="dto">CurrencyRates</param>
         /// <returns>CurrencyRate id</returns>
-        Task<int> CurrencyRateSaveAsync(CurrencyRateDto dto);
+        Task<string> CurrencyRatesSaveToDbAsync(CurrencyRates dto);
 
         /// <summary>
         /// Update CurrencyRate's information of existing CurrencyRate
@@ -27,8 +28,7 @@ namespace CurrencyApiLib.Services.CurrencyRate.Interfaces
         /// <returns></returns>
         Task DeleteCurrencyRatesAsync(DeleteCurrencyRateDto dto);
 
-        #region *TODO* delete if not using 
-        //Task<IEnumerable<CurrencyRateDto>> GetAllCurrencyRates();
-        #endregion
+        Task<List<CurrencyRates>> GetAllCurrencyRatesFromDbAsync();
+
     }
 }

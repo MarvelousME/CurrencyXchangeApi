@@ -7,7 +7,7 @@ namespace CurrencyApiInfrastructure.Entities
     public class CurrencyRate : TableBase
     {
         [Key]
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public DateTime GetRequestDate { get; set; } = DateTime.UtcNow;
         public double AED { get; set; } = default!;
         public double ARS { get; set; } = default!;

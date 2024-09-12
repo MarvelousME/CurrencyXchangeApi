@@ -4,6 +4,8 @@ using CurrencyApiInfrastructure.Extensions;
 using CurrencyApiInfrastructure.Extensions.TokenExtensions;
 using CurrencyApiInfrastructure.Resources;
 using CurrencyApiLib.MapperConfigurations;
+using CurrencyApiLib.Services.CurrencyRate.Classes;
+using CurrencyApiLib.Services.CurrencyRate.Interfaces;
 using CurrencyApiLib.ServicesExtensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -25,6 +27,8 @@ var appSetting = configuration.Get<AppSetting>();
 
 builder.Services.AddTransient<IAppSetting, AppSetting>();
 
+builder.Services.AddScoped<ICurrencyRateService, CurrencyRateService>();
+
 builder.Services.AddCustomLocalizationConfiguration();
 
 ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Continue;
@@ -44,8 +48,7 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-GenerateAndVerifyPasswords.Localizer =
-    app.Services.GetService<IStringLocalizer<ExceptionsResource>>();
+GenerateAndVerifyPasswords.Localizer = app.Services.GetService<IStringLocalizer<ExceptionsResource>>();
 
 if (app.Environment.IsDevelopment())
 {
@@ -61,7 +64,6 @@ app.UseRequestLocalization();
 app.UseStaticHttpContext();
 
 app.UseCors(opts =>
-        // Content dispositon is useful for getting file name for frontend application
         opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("Content-Disposition")
 );
 
