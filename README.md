@@ -1,6 +1,6 @@
 # CurrencyXchangeApi
 
-#=== Assessment ===
+# Assessment - WSB
 
 # Instructions
 1. MySQL connection string needs to be updated in the appsettings file to point to your connection instance.
