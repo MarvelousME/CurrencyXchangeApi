@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>warnings</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ActionFilters\Classes\**" />
+    <Compile Remove="ActionFilters\Interfaces\**" />
+    <Compile Remove="Controllers\Auth\**" />
+    <Compile Remove="Controllers\Book\**" />
+    <Compile Remove="Controllers\Member\**" />
+    <Compile Remove="Controllers\Report\**" />
+    <Compile Remove="Controllers\Reservation\**" />
+    <Content Remove="ActionFilters\Classes\**" />
+    <Content Remove="ActionFilters\Interfaces\**" />
+    <Content Remove="Controllers\Auth\**" />
+    <Content Remove="Controllers\Book\**" />
+    <Content Remove="Controllers\Member\**" />
+    <Content Remove="Controllers\Report\**" />
+    <Content Remove="Controllers\Reservation\**" />
+    <EmbeddedResource Remove="ActionFilters\Classes\**" />
+    <EmbeddedResource Remove="ActionFilters\Interfaces\**" />
+    <EmbeddedResource Remove="Controllers\Auth\**" />
+    <EmbeddedResource Remove="Controllers\Book\**" />
+    <EmbeddedResource Remove="Controllers\Member\**" />
+    <EmbeddedResource Remove="Controllers\Report\**" />
+    <EmbeddedResource Remove="Controllers\Reservation\**" />
+    <None Remove="ActionFilters\Classes\**" />
+    <None Remove="ActionFilters\Interfaces\**" />
+    <None Remove="Controllers\Auth\**" />
+    <None Remove="Controllers\Book\**" />
+    <None Remove="Controllers\Member\**" />
+    <None Remove="Controllers\Report\**" />
+    <None Remove="Controllers\Reservation\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\TestController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="NetCore.AutoRegisterDi" Version="2.2.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CurrencyApiDomain\CurrencyApiDomain.csproj" />
+    <ProjectReference Include="..\CurrencyApiInfrastructure\CurrencyApiInfrastructure.csproj" />
+    <ProjectReference Include="..\CurrencyApiLib\CurrencyApiLib.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,139 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>warnings</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entities\ActiveBookReservations.cs" />
+    <Compile Remove="Entities\BookReservationHistories.cs" />
+    <Compile Remove="Entities\Books.cs" />
+    <Compile Remove="Entities\CurrencyRatesRepo.cs" />
+    <Compile Remove="Entities\MemberRoles.cs" />
+    <Compile Remove="Entities\Members.cs" />
+    <Compile Remove="Entities\Roles.cs" />
+    <Compile Remove="Enums\BookCoverTypes.cs" />
+    <Compile Remove="Enums\BookTitleTypes.cs" />
+    <Compile Remove="Repositories\IActiveBookReservationsRepo.cs" />
+    <Compile Remove="Repositories\IBookReservationHistoriesRepo.cs" />
+    <Compile Remove="Repositories\IBooksRepo.cs" />
+    <Compile Remove="Repositories\IMemberRolesRepo.cs" />
+    <Compile Remove="Repositories\IMembersRepo.cs" />
+    <Compile Remove="Repositories\IRolesRepo.cs" />
+    <Compile Remove="Resources\BookReservationValidaitonResource.cs" />
+    <Compile Remove="Resources\BookReservationValidationResource.en-GB.Designer.cs" />
+    <Compile Remove="Resources\BookReservationValidationResource.tr-TR.Designer.cs" />
+    <Compile Remove="Resources\BookValidationResource.cs" />
+    <Compile Remove="Resources\BookValidationResource.en-GB.Designer.cs" />
+    <Compile Remove="Resources\BookValidationResource.tr-TR.Designer.cs" />
+    <Compile Remove="Resources\MemberValidationResource.cs" />
+    <Compile Remove="Resources\MemberValidationResource.en-GB.Designer.cs" />
+    <Compile Remove="Resources\MemberValidationResource.tr-TR.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Resources\BookReservationValidationResource.en-GB.resx" />
+    <EmbeddedResource Remove="Resources\BookReservationValidationResource.tr-TR.resx" />
+    <EmbeddedResource Remove="Resources\BookValidationResource.en-GB.resx" />
+    <EmbeddedResource Remove="Resources\BookValidationResource.tr-TR.resx" />
+    <EmbeddedResource Remove="Resources\MemberValidationResource.en-GB.resx" />
+    <EmbeddedResource Remove="Resources\MemberValidationResource.tr-TR.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.3.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.3.0" />
+    <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
+    <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
+    <PackageReference Include="Serilog.Expressions" Version="4.0.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.MongoDB" Version="5.3.1" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\SharedResource.en-GB.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.en-GB.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.tr-TR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.tr-TR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\DisplayNameResource.en-GB.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DisplayNameResource.en-GB.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\DisplayNameResource.tr-TR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DisplayNameResource.tr-TR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ActionFiltersResource.en-GB.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ActionFiltersResource.en-GB.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ActionFiltersResource.tr-TR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ActionFiltersResource.tr-TR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ExceptionsResource.en-GB.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionsResource.en-GB.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ExceptionsResource.tr-TR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionsResource.tr-TR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\SharedResource.en-GB.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.en-GB.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\SharedResource.tr-TR.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.tr-TR.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\DisplayNameResource.en-GB.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DisplayNameResource.en-GB.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\DisplayNameResource.tr-TR.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DisplayNameResource.tr-TR.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\ActionFiltersResource.en-GB.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ActionFiltersResource.en-GB.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\ActionFiltersResource.tr-TR.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ActionFiltersResource.tr-TR.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\ExceptionsResource.en-GB.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExceptionsResource.en-GB.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\ExceptionsResource.tr-TR.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExceptionsResource.tr-TR.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

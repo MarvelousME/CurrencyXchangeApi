@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>warnings</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Dtos\BookReservation\**" />
+    <Compile Remove="Dtos\Book\**" />
+    <Compile Remove="Dtos\Member\**" />
+    <Compile Remove="Services\BookReservation\**" />
+    <Compile Remove="Services\Book\**" />
+    <Compile Remove="Services\Member\**" />
+    <Compile Remove="Services\Token\**" />
+    <EmbeddedResource Remove="Dtos\BookReservation\**" />
+    <EmbeddedResource Remove="Dtos\Book\**" />
+    <EmbeddedResource Remove="Dtos\Member\**" />
+    <EmbeddedResource Remove="Services\BookReservation\**" />
+    <EmbeddedResource Remove="Services\Book\**" />
+    <EmbeddedResource Remove="Services\Member\**" />
+    <EmbeddedResource Remove="Services\Token\**" />
+    <None Remove="Dtos\BookReservation\**" />
+    <None Remove="Dtos\Book\**" />
+    <None Remove="Dtos\Member\**" />
+    <None Remove="Services\BookReservation\**" />
+    <None Remove="Services\Book\**" />
+    <None Remove="Services\Member\**" />
+    <None Remove="Services\Token\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CurrencyApiDomain\CurrencyApiDomain.csproj" />
+    <ProjectReference Include="..\CurrencyApiInfrastructure\CurrencyApiInfrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
