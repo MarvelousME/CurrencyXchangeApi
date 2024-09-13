@@ -4,6 +4,9 @@ using CurrencyApiLib.Dtos.CurrencyRate;
 using CurrencyApiLib.Services.Cache.Interfaces;
 using CurrencyApiLib.Services.CurrencyRate.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
+using System;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CurrencyApiLib.Controllers.CurrencyExchange
 {
@@ -272,7 +275,7 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
         /// Get external api currency rates asynchronously.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/api/v1/GetExternalApiCurrencyRatesAsync/")]
+        [HttpGet("/api/v1/GetExternalApiCurrencyRatesAsync/{currencyCode}")]
         public async Task<CurrencyRates> GetExternalApiCurrencyRatesAsync(string currencyCode)
         {
             currencyCode = currencyCode.ToUpper();
@@ -294,6 +297,88 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
             }
 
             return null;
+        }
+
+        [HttpGet("/api/v1/ConvertCurrencyAsync/{fromCurrency}/{toCurrency}/{amount}")]
+        public async Task<ResultMessage> ConvertCurrencyAsync(string fromCurrency, string toCurrency, string amount)
+        {
+            result = new ResultMessage();
+            string message = string.Empty;
+            fromCurrency = fromCurrency.ToUpper();
+            toCurrency = toCurrency.ToUpper();
+            cacheKey = cacheKey + $"{fromCurrency}";
+
+            try
+            {
+                var cacheData = _cacheService.GetData<CurrencyRates>(cacheKey);
+                if (cacheData != null)
+                {
+                    //Do calculation from cache
+                    var cacheQuery = cacheData.GetType()
+                 .GetProperties()
+                 .Select(p => p.GetValue(toCurrency))
+                 .Select(o => object.ReferenceEquals(o, null)
+                           ? default(string)
+                           : o.ToString()
+                        );
+
+                    result = new ResultMessage
+                    {
+                        Message = "loaded data from cache",
+                        data = cacheData
+                    };
+
+                    return await Task.FromResult(result);
+                }
+
+                data = WebClient.Request(externalAPI.Url, externalAPI.ApiKey, fromCurrency);
+
+                var url = string.Format(externalAPI.Url, externalAPI.ApiKey, fromCurrency);
+                if (data.conversion_rates == null)
+                {
+                    return result = new ResultMessage
+                    {
+                        Message = $"Request to the external api at {url} returned null, Please try again later.",
+                        data = data.conversion_rates
+                    };
+                }
+
+                //Do calculation from live results coming from the external api
+              
+
+                var query = data.GetType()
+                 .GetProperties()
+                 .Select(p => p.GetValue(toCurrency))
+                 .Select(o => object.ReferenceEquals(o, null)
+                           ? default(string)
+                           : o.ToString()
+                        );
+
+
+
+                _logger.LogInformation(message);
+
+                //Set expiry of cache to 15 mins
+                
+                result = new ResultMessage
+                {
+                    Message = message
+                };
+                return await Task.FromResult((result));
+
+            }
+            catch (Exception ex)
+            {
+                //log error
+                _logger.LogError(ex, "The GetExternalApiCurrencyRatesAndSavedToDbAsync method failed.");
+            }
+
+            result = new ResultMessage
+            {
+                Message = "failed to save record to the database.",
+                data = null
+            };
+            return await Task.FromResult(result);
         }
     }
 
