@@ -22,15 +22,12 @@ https://github.com/microsoftarchive/redis/releases/tag/win-3.0.504
 Step 2. Extract the zip file and later on open the Redis Server and Redis CLI.
 ![Redis](https://github.com/user-attachments/assets/5e7ef845-fbea-4673-a038-6a0d69bf8b4b)
 
- Install the following NuGet Packages, which need step by steps in our application
+# Install the following NuGet Packages, which need step by steps in our application
 
 StackExchange.Redis
 
 
-#Developer Comments
-:-)
 
-#Assessor Comments
 
 
 
