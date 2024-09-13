@@ -8,13 +8,13 @@ namespace CurrencyApi.HttpClient
     /// </summary>
     public class WebClient
     {
-        public static CurrencyRateDto Request(string Url, string ApiKey)
+        public static CurrencyRateDto Request(string Url, string ApiKey,string currencyCode)
         {
             CurrencyRateDto data = new CurrencyRateDto();
             try
             {
-                //Would of used RestSharp client
-                string URLString = string.Format(Url, ApiKey);
+                //TODO: Would of used RestSharp client
+                string URLString = string.Format(Url, ApiKey, currencyCode.ToUpper());
 
                 using (var webClient = new System.Net.WebClient())
                 {

@@ -15,6 +15,10 @@ namespace CurrencyApiInfrastructure.Entities
         [Key]
         public int? Id { get; set; }
         /// <summary>
+        /// Gets or sets the currency code.
+        /// </summary>
+        public string CurrencyCode { get; set; }
+        /// <summary>
         /// Gets or sets the get request date.
         /// </summary>
         public DateTime GetRequestDate { get; set; } = DateTime.UtcNow;

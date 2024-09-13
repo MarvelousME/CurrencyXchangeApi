@@ -22,7 +22,7 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
         /// <param name="configuration">The configuration.</param>
         /// <param name="logger">The logger.</param>
 
-        private const string cacheKey = "currency-rates";
+        private string cacheKey = "currency-rates_";
 
         /// <summary>
         /// The cache service
@@ -78,12 +78,21 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
         /// Get all currency rates from db asynchronously.
         /// </summary>
         /// <returns><![CDATA[Task<ResultMessage>]]></returns>
-        [HttpGet]
+        [HttpGet("/api/v1/GetAllCurrencyRatesFromDbAsync/")]
         public async Task<ResultMessage> GetAllCurrencyRatesFromDbAsync()
         {
             try
             {
                 var listData = await _currencyRateService.GetAllCurrencyRatesFromDbAsync();
+                if(listData == null)
+                {
+                    result = new ResultMessage
+                    {
+                        Message = $"No rows returned fom the database"
+                    };
+                    return await Task.FromResult(result);
+                }
+
 
                 result = new ResultMessage
                 {
@@ -107,14 +116,100 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
         }
 
         /// <summary>
+        /// Get all currency rates from db asynchronously.
+        /// </summary>
+        /// <param name="currencyCode">The currency code.</param>
+        /// <returns><![CDATA[Task<ResultMessage>]]></returns>
+        [HttpGet("/api/v1/GetAllCurrencyRatesFromDbAsync/{currencyCode}")]
+        public async Task<ResultMessage> GetAllCurrencyRatesFromDbAsync(string currencyCode)
+        {
+            currencyCode = currencyCode.ToUpper();
+            try
+            {
+                var listData = await _currencyRateService.GetAllCurrencyRatesFromDbAsync(currencyCode);
+                if (listData == null)
+                {
+                    result = new ResultMessage
+                    {
+                        Message = $"No rows returned fom the database"
+                    };
+                    return await Task.FromResult(result);
+                }
+
+                result = new ResultMessage
+                {
+                    list = listData,
+                    Message = $"{listData.Count()} rows returned fom the database"
+                };
+                return await Task.FromResult(result);
+
+            }
+            catch (Exception ex)
+            {
+                //log error
+                _logger.LogError(ex, "The GetAllCurrencyRatesFromDbAsync request failed");
+            }
+
+            result = new ResultMessage
+            {
+                Message = $"No rows returned fom the database"
+            };
+            return null;
+        }
+
+        /// <summary>
+        /// Get latest currency rates from db asynchronously.
+        /// </summary>
+        /// <param name="currencyCode">The currency code.</param>
+        /// <returns><![CDATA[Task<ResultMessage>]]></returns>
+        [HttpGet("/api/v1/GetLatestCurrencyRatesFromDbAsync/{currencyCode}")]
+        public async Task<ResultMessage> GetLatestCurrencyRatesFromDbAsync(string currencyCode)
+        {
+            currencyCode = currencyCode.ToUpper();
+            try
+            {
+                var data = await _currencyRateService.GetLatestCurrencyRatesFromDbAsync(currencyCode);
+                if (data == null)
+                {
+                    result = new ResultMessage
+                    {
+                        Message = $"No rows returned fom the database"
+                    };
+                    return await Task.FromResult(result);
+                }
+
+                result = new ResultMessage
+                {
+                    data = data,
+                    Message = $"Last inserted record for Currency Code, { currencyCode } - from the database"
+                };
+                return await Task.FromResult(result);
+
+            }
+            catch (Exception ex)
+            {
+                //log error
+                _logger.LogError(ex, "The GetAllCurrencyRatesFromDbAsync request failed");
+            }
+
+            result = new ResultMessage
+            {
+                Message = $"No rows returned fom the database"
+            };
+            return null;
+        }
+        /// <summary>
         /// Get external currency rates asynchronously.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<ResultMessage> GetExternalApiCurrencyRatesAndSaveToDbAsync()
+        [HttpGet("/api/v1/GetExternalApiCurrencyRatesAndSaveToDatabase/{currencyCode}")]
+        public async Task<ResultMessage> GetExternalApiCurrencyRatesAndSaveToDbAsync(string currencyCode)
         {
             result = new ResultMessage();
             string message = string.Empty;
+            currencyCode = currencyCode.ToUpper();
+            cacheKey = cacheKey + $"{currencyCode}";
+
             try
             {
                 var cacheData = _cacheService.GetData<CurrencyRates>(cacheKey);
@@ -129,13 +224,21 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
                     return await Task.FromResult(result);
                 }
 
-                data = WebClient.Request(externalAPI.Url, externalAPI.ApiKey);
+                data = WebClient.Request(externalAPI.Url, externalAPI.ApiKey, currencyCode);
 
-                var url = string.Format(externalAPI.Url, externalAPI.ApiKey);
+                var url = string.Format(externalAPI.Url, externalAPI.ApiKey, currencyCode);
+                if (data.conversion_rates == null)
+                {
+                    return result = new ResultMessage
+                    {
+                        Message = $"Request to the external api at {url} returned null, Please try again later.",
+                        data = data.conversion_rates
+                    };
+                }
 
                 _logger.LogInformation($"The GetExternalApiCurrencyRatesAndSaveToDbAsync request executed successfully on url: {url}");
 
-                message = await _currencyRateService.CurrencyRatesSaveToDbAsync(data.conversion_rates);
+                message = await _currencyRateService.CurrencyRatesSaveToDbAsync(data.conversion_rates, currencyCode);
 
                 _logger.LogInformation(message);
 
@@ -169,14 +272,15 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
         /// Get external api currency rates asynchronously.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<CurrencyRates> GetExternalApiCurrencyRatesAsync()
+        [HttpGet("/api/v1/GetExternalApiCurrencyRatesAsync/")]
+        public async Task<CurrencyRates> GetExternalApiCurrencyRatesAsync(string currencyCode)
         {
+            currencyCode = currencyCode.ToUpper();
             try
             {
-                data = WebClient.Request(externalAPI.Url, externalAPI.ApiKey);
+                data = WebClient.Request(externalAPI.Url, externalAPI.ApiKey, currencyCode);
 
-                var url = string.Format(externalAPI.Url, externalAPI.ApiKey);
+                var url = string.Format(externalAPI.Url, externalAPI.ApiKey, currencyCode);
 
                 _logger.LogInformation(
                     $"The GetExternalApiCurrencyRatesAsync request executed successfully on url: {url}");

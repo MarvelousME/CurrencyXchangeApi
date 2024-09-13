@@ -12,7 +12,7 @@ namespace CurrencyApiLib.Services.CurrencyRate.Interfaces
         /// </summary>
         /// <param name="dto">CurrencyRates</param>
         /// <returns>CurrencyRate id</returns>
-        Task<string> CurrencyRatesSaveToDbAsync(CurrencyRates dto);
+        Task<string> CurrencyRatesSaveToDbAsync(CurrencyRates dto, string currencyCode);
 
         /// <summary>
         /// Update CurrencyRate's information of existing CurrencyRate
@@ -29,6 +29,12 @@ namespace CurrencyApiLib.Services.CurrencyRate.Interfaces
         Task DeleteCurrencyRatesAsync(DeleteCurrencyRateDto dto);
 
         Task<List<CurrencyRates>> GetAllCurrencyRatesFromDbAsync();
+
+        Task<CurrencyRates> GetLatestCurrencyRatesFromDbAsync(string currencyCode);
+
+        Task<List<CurrencyRates>> GetAllCurrencyRatesFromDbAsync(string currencyCode);
+
+        Task<double> ConvertCurrencyRateAmountAsync(string currencyCode,string toCurrencyCode,double amount);
 
     }
 }
