@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\TestController.cs" />
+    <Compile Remove="Helpers\ConnectionHelper.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,6 +54,10 @@
     <ProjectReference Include="..\CurrencyApiDomain\CurrencyApiDomain.csproj" />
     <ProjectReference Include="..\CurrencyApiInfrastructure\CurrencyApiInfrastructure.csproj" />
     <ProjectReference Include="..\CurrencyApiLib\CurrencyApiLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers\" />
   </ItemGroup>
 
 </Project>

@@ -4,6 +4,8 @@ using CurrencyApiInfrastructure.Extensions;
 using CurrencyApiInfrastructure.Extensions.TokenExtensions;
 using CurrencyApiInfrastructure.Resources;
 using CurrencyApiLib.MapperConfigurations;
+using CurrencyApiLib.Services.Cache.Classes;
+using CurrencyApiLib.Services.Cache.Interfaces;
 using CurrencyApiLib.Services.CurrencyRate.Classes;
 using CurrencyApiLib.Services.CurrencyRate.Interfaces;
 using CurrencyApiLib.ServicesExtensions;
@@ -26,6 +28,8 @@ builder.Services.Configure<AppSetting>(configuration);
 var appSetting = configuration.Get<AppSetting>();
 
 builder.Services.AddTransient<IAppSetting, AppSetting>();
+
+builder.Services.AddScoped<ICacheService, CacheService>();
 
 builder.Services.AddScoped<ICurrencyRateService, CurrencyRateService>();
 
