@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using System;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Reflection;
+using static MongoDB.Driver.WriteConcern;
+using CurrencyApi.Helpers;
+using CurrencyApi.Models;
 
 namespace CurrencyApiLib.Controllers.CurrencyExchange
 {
@@ -299,38 +303,67 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
             return null;
         }
 
+        /// <summary>
+        /// Convert the currency asynchronously.
+        /// </summary>
+        /// <param name="fromCurrency">The from currency.</param>
+        /// <param name="toCurrency">The to currency.</param>
+        /// <param name="amount">The amount.</param>
+        /// <returns><![CDATA[Task<ResultMessage>]]></returns>
         [HttpGet("/api/v1/ConvertCurrencyAsync/{fromCurrency}/{toCurrency}/{amount}")]
         public async Task<ResultMessage> ConvertCurrencyAsync(string fromCurrency, string toCurrency, string amount)
         {
-            result = new ResultMessage();
+
             string message = string.Empty;
+            string toRateValue = string.Empty;
+            string fromRateValue = string.Empty;
+
             fromCurrency = fromCurrency.ToUpper();
             toCurrency = toCurrency.ToUpper();
             cacheKey = cacheKey + $"{fromCurrency}";
-
+            double calculation = double.Parse("0.00");
+        
             try
             {
+                var inputCheck = InputHelper.CheckInputValue(InputType.Amount, amount);
+                if(!inputCheck.Item1) return new ResultMessage(){ Message = inputCheck.Item2 };
+
+                inputCheck = InputHelper.CheckInputValue(InputType.CurrencyCode, fromCurrency);
+                if (!inputCheck.Item1) return new ResultMessage() { Message = inputCheck.Item2 };
+
+                inputCheck = InputHelper.CheckInputValue(InputType.CurrencyCode, toCurrency);
+                if (!inputCheck.Item1) return new ResultMessage() { Message = inputCheck.Item2 };
+
+
+
+                #region Calculate from Cache
                 var cacheData = _cacheService.GetData<CurrencyRates>(cacheKey);
                 if (cacheData != null)
                 {
                     //Do calculation from cache
-                    var cacheQuery = cacheData.GetType()
-                 .GetProperties()
-                 .Select(p => p.GetValue(toCurrency))
-                 .Select(o => object.ReferenceEquals(o, null)
-                           ? default(string)
-                           : o.ToString()
-                        );
+                    toRateValue = PropertyHelper.FindPropertValueinClass(toCurrency, cacheData).ToString();
+
+                    //Do calculation from cache results coming from the external api
+                    toRateValue = PropertyHelper.FindPropertValueinClass(toCurrency, cacheData).ToString();
+                    fromRateValue = PropertyHelper.FindPropertValueinClass(fromCurrency, cacheData).ToString();
+
+                    var inputCache = new CalculationRate
+                    {
+                        Base = Convert.ToDouble(fromRateValue),
+                        Target = Convert.ToDouble(toRateValue),
+                        Amount = Convert.ToDouble(amount)
+                    };
 
                     result = new ResultMessage
                     {
-                        Message = "loaded data from cache",
-                        data = cacheData
+                        Message = $"Amount: {amount} converted from {fromCurrency} to {toCurrency} = {calculation.ToString()}",
                     };
 
                     return await Task.FromResult(result);
                 }
+                #endregion
 
+                #region Calculate from External Api
                 data = WebClient.Request(externalAPI.Url, externalAPI.ApiKey, fromCurrency);
 
                 var url = string.Format(externalAPI.Url, externalAPI.ApiKey, fromCurrency);
@@ -342,28 +375,27 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
                         data = data.conversion_rates
                     };
                 }
-
+               
                 //Do calculation from live results coming from the external api
-              
+                toRateValue = PropertyHelper.FindPropertValueinClass(toCurrency, data.conversion_rates).ToString();
+                fromRateValue = PropertyHelper.FindPropertValueinClass(fromCurrency, data.conversion_rates).ToString();
 
-                var query = data.GetType()
-                 .GetProperties()
-                 .Select(p => p.GetValue(toCurrency))
-                 .Select(o => object.ReferenceEquals(o, null)
-                           ? default(string)
-                           : o.ToString()
-                        );
+                var input = new CalculationRate
+                {
+                    Base = Convert.ToDouble(fromRateValue),
+                    Target = Convert.ToDouble(toRateValue),
+                    Amount = Convert.ToDouble(amount)
+                };
 
+                input = ConversionHelper.Calculate(input);
 
-
-                _logger.LogInformation(message);
-
-                //Set expiry of cache to 15 mins
-                
+                _logger.LogInformation($"Amount: {input.Amount} converted from {fromCurrency} to {toCurrency} = {input.Result.ToString()}");
                 result = new ResultMessage
                 {
-                    Message = message
+                    Message = $"Amount: {input.Amount} converted from {fromCurrency} to {toCurrency} = {input.Result.ToString()}",
                 };
+                #endregion
+
                 return await Task.FromResult((result));
 
             }
@@ -380,26 +412,5 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
             };
             return await Task.FromResult(result);
         }
-    }
-
-    /// <summary>
-    /// The external API.
-    /// </summary>
-    public class ExternalAPI
-    {
-        /// <summary>
-        /// Name.
-        /// </summary>
-        public const string Name = "ExternalAPI";
-
-        /// <summary>
-        /// Gets or sets the api key.
-        /// </summary>
-        public string ApiKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets the url.
-        /// </summary>
-        public string Url { get; set; }
     }
 }
