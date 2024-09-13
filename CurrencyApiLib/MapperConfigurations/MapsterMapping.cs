@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace CurrencyApiLib.MapperConfigurations
 {
+    /// <summary>
+    /// The mapster mapping.
+    /// </summary>
     public class MapsterMapping : ICustomMapper
     {
         public TDestination Map<TSource, TDestination>(TSource source) where TDestination : class where TSource : class

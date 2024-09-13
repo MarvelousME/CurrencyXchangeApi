@@ -9,10 +9,22 @@ using System.Threading.Tasks;
 
 namespace CurrencyApiDomain.DbBase.Repositories.Base
 {
+    /// <summary>
+    /// The base repo.
+    /// </summary>
+    /// <typeparam name="T"/>
+    /// <typeparam name="S"/>
     public class BaseRepo<T, S> : IBaseRepo<T, S> where T : TableBase where S : IConvertible
     {
+        /// <summary>
+        /// The dbcontext.
+        /// </summary>
         protected readonly AppDbContext _dbcontext;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseRepo"/> class.
+        /// </summary>
+        /// <param name="dbContext">The db context.</param>
         public BaseRepo(AppDbContext dbContext)
         {
             _dbcontext = dbContext;

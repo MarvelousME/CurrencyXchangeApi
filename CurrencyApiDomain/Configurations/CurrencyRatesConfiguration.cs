@@ -4,13 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CurrencyApiDomain.Configurations
 {
-    internal class CurrencyRatesConfiguration : IEntityTypeConfiguration<CurrencyRate>
+    /// <summary>
+    /// The currency rates configuration.
+    /// </summary>
+    public class CurrencyRatesConfiguration : IEntityTypeConfiguration<CurrencyRate>
     {
         public void Configure(EntityTypeBuilder<CurrencyRate> builder)
         {
             builder.HasKey(b => b.Id);
-            builder.Property(b => b.GetRequestDate)
-                .IsRequired();
+            builder.Property(b => b.GetRequestDate).IsRequired();
             builder.Property(b => b.AED);
             builder.Property(b => b.ARS);
             builder.Property(b => b.AUD);
@@ -62,7 +64,6 @@ namespace CurrencyApiDomain.Configurations
             builder.Property(b => b.USD);
             builder.Property(b => b.UYU);
             builder.Property(b => b.ZAR);
-
         }
     }
 }

@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CurrencyApi.Manager
+﻿namespace CurrencyApi.Manager
 {
-    static class ConfigurationManager
+    /// <summary>
+    /// The configuration manager.
+    /// </summary>
+    public static class ConfigurationManager
     {
-        public static IConfiguration ApplicationSettings
-        {
-            get;
-        }
+        /// <summary>
+        /// Gets the application settings.
+        /// </summary>
+        public static IConfiguration ApplicationSettings { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfigurationManager"/> class.
+        /// </summary>
         static ConfigurationManager()
         {
-            ApplicationSettings = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
+            ApplicationSettings = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
         }
     }
 }

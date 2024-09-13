@@ -48,7 +48,17 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
         /// The external API.
         /// </summary>
         private ExternalAPI externalAPI;
+        /// <summary>
+        /// The result.
+        /// </summary>
         private ResultMessage result;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CurrencyRatesController"/> class.
+        /// </summary>
+        /// <param name="currencyRateService">The currency rate service.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="cacheService">The cache service.</param>
+        /// <param name="logger">The logger.</param>
         public CurrencyRatesController(
             ICurrencyRateService currencyRateService,
             IConfiguration configuration,
@@ -64,6 +74,10 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
             Configuration.GetSection("ExternalAPI").Bind(externalAPI);
         }
 
+        /// <summary>
+        /// Get all currency rates from db asynchronously.
+        /// </summary>
+        /// <returns><![CDATA[Task<ResultMessage>]]></returns>
         [HttpGet]
         public async Task<ResultMessage> GetAllCurrencyRatesFromDbAsync()
         {
@@ -72,14 +86,14 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
                 var listData = await _currencyRateService.GetAllCurrencyRatesFromDbAsync();
 
                 result = new ResultMessage
-                { 
-                     list = listData,
-                     Message = $"{listData.Count()} rows returned fom the database"
+                {
+                    list = listData,
+                    Message = $"{listData.Count()} rows returned fom the database"
                 };
                 return await Task.FromResult(result);
 
-            } 
-            catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 //log error
                 _logger.LogError(ex, "The GetAllCurrencyRatesFromDbAsync request failed");
@@ -104,14 +118,14 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
             try
             {
                 var cacheData = _cacheService.GetData<CurrencyRates>(cacheKey);
-                if(cacheData != null)
+                if (cacheData != null)
                 {
                     result = new ResultMessage
                     {
-                         Message = "loaded data from cache",
-                         data = cacheData
+                        Message = "loaded data from cache",
+                        data = cacheData
                     };
-                    
+
                     return await Task.FromResult(result);
                 }
 
@@ -125,7 +139,7 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
 
                 _logger.LogInformation(message);
 
-                //Set exipry of cache to 15 mins
+                //Set expiry of cache to 15 mins
                 var expirationTime = DateTimeOffset.Now.AddMinutes(15.0);
                 _cacheService.SetData<CurrencyRates>(cacheKey, data.conversion_rates, expirationTime);
 
@@ -136,8 +150,8 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
                 };
                 return await Task.FromResult((result));
 
-            } 
-            catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 //log error
                 _logger.LogError(ex, "The GetExternalApiCurrencyRatesAndSavedToDbAsync method failed.");
@@ -168,7 +182,8 @@ namespace CurrencyApiLib.Controllers.CurrencyExchange
                     $"The GetExternalApiCurrencyRatesAsync request executed successfully on url: {url}");
 
                 return await Task.FromResult(data.conversion_rates);
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 //log error
                 _logger.LogError(ex, "The GetExternalApiCurrencyRatesAsync request failed");

@@ -8,13 +8,24 @@ using System.Reflection;
 
 namespace CurrencyApiDomain.ContextRelated
 {
+    /// <summary>
+    /// The app db context.
+    /// </summary>
     public partial class AppDbContext : DbContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AppDbContext"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
         public AppDbContext(DbContextOptions options) : base(options)
         {
             Database.EnsureCreated();
         }
 
+        /// <summary>
+        /// On model creating.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -32,6 +43,12 @@ namespace CurrencyApiDomain.ContextRelated
         }
 
 
+        /// <summary>
+        /// Convert filter expression for soft deletables.
+        /// </summary>
+        /// <param name="filterExpression">The filter expression.</param>
+        /// <param name="entityType">The entity type.</param>
+        /// <returns>A LambdaExpression</returns>
         private static LambdaExpression ConvertFilterExpressionForSoftDeletables(
                             Expression<Func<ISoftDeletable, bool>> filterExpression,
                             Type entityType)

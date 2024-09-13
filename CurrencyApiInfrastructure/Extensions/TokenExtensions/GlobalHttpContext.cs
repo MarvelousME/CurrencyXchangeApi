@@ -5,8 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 namespace CurrencyApiInfrastructure.Extensions.TokenExtensions
 {
 
+    /// <summary>
+    /// The global http context.
+    /// </summary>
     public static class GlobalHttpContext
     {
+        /// <summary>
+        /// The context accessor.
+        /// </summary>
         public static IHttpContextAccessor _contextAccessor;
 
         internal static void Configure(IHttpContextAccessor contextAccessor)
@@ -15,6 +21,9 @@ namespace CurrencyApiInfrastructure.Extensions.TokenExtensions
         }
     }
 
+    /// <summary>
+    /// The static http context extensions.
+    /// </summary>
     public static class StaticHttpContextExtensions
     {
         public static IApplicationBuilder UseStaticHttpContext(this IApplicationBuilder app)

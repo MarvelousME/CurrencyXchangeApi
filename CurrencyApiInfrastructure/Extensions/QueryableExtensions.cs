@@ -7,6 +7,9 @@ using System.Linq.Expressions;
 
 namespace CurrencyApiInfrastructure.Extensions
 {
+    /// <summary>
+    /// The queryable extensions.
+    /// </summary>
     public static class QueryableExtensions
     {
         /// <summary>

@@ -18,8 +18,16 @@ using static CurrencyApiInfrastructure.Statics.Methods.TokenRelated;
 
 namespace CurrencyApiLib.ServicesExtensions
 {
+    /// <summary>
+    /// The services extensions.
+    /// </summary>
     public static class ServicesExtensions
     {
+        /// <summary>
+        /// Add range custom services.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="appSetting">The app setting.</param>
         public static void AddRangeCustomServices(this IServiceCollection services, AppSetting appSetting)
         {
             services.AddCustomJwtService(appSetting.TokenOptions);
@@ -62,6 +70,11 @@ namespace CurrencyApiLib.ServicesExtensions
             services.AddTransientServices(assembliesToScan);
         }
 
+        /// <summary>
+        /// Add transient services.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="assembliesToScan">The assemblies converts to scan.</param>
         private static void AddTransientServices(this IServiceCollection services, Assembly[] assembliesToScan)
         {
             services.AddTransient(typeof(GenericNotFoundFilter<>));
@@ -70,6 +83,11 @@ namespace CurrencyApiLib.ServicesExtensions
               .AsPublicImplementedInterfaces(ServiceLifetime.Transient);
         }
 
+        /// <summary>
+        /// Add custom jwt service.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="tokenOptions">The token options.</param>
         private static void AddCustomJwtService(this IServiceCollection services, TokenOptions tokenOptions)
         {
             services.AddAuthentication(options =>
@@ -93,6 +111,10 @@ namespace CurrencyApiLib.ServicesExtensions
             });
         }
 
+        /// <summary>
+        /// Add custom swagger configuration.
+        /// </summary>
+        /// <param name="services">The services.</param>
         public static void AddCustomSwaggerConfiguration(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -121,6 +143,10 @@ namespace CurrencyApiLib.ServicesExtensions
             });
         }
 
+        /// <summary>
+        /// Add custom localization configuration.
+        /// </summary>
+        /// <param name="services">The services.</param>
         public static void AddCustomLocalizationConfiguration(this IServiceCollection services)
         {
             services.AddLocalization();

@@ -11,8 +11,16 @@ using System.Text.Json;
 
 namespace CurrencyApiInfrastructure.ExceptionHandling.Extensions;
 
+/// <summary>
+/// The global exception handler extension.
+/// </summary>
 public static class GlobalExceptionHandlerExtension
 {
+    /// <summary>
+    /// Use custom global exception handler.
+    /// </summary>
+    /// <param name="app">The app.</param>
+    /// <param name="localizer">The localizer.</param>
     public static void UseCustomGlobalExceptionHandler(this WebApplication app, IStringLocalizer<SharedResource> localizer)
     {
         app.UseExceptionHandler(builder =>

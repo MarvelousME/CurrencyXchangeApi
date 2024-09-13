@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 
 namespace CurrencyApi.HttpClient
 {
+    /// <summary>
+    /// The web client.
+    /// </summary>
     public class WebClient
     {
         public static CurrencyRateDto Request(string Url, string ApiKey)

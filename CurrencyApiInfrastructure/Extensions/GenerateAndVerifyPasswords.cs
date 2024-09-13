@@ -5,11 +5,26 @@ using Microsoft.Extensions.Localization;
 
 namespace CurrencyApiInfrastructure.Extensions
 {
+    /// <summary>
+    /// The generate and verify passwords.
+    /// </summary>
     public static class GenerateAndVerifyPasswords
     {
+        /// <summary>
+        /// The minimum password length.
+        /// </summary>
         private const byte MinimumPasswordLength = 8;
 
+        /// <summary>
+        /// The localizer.
+        /// </summary>
         public static IStringLocalizer<ExceptionsResource> Localizer;
+        /// <summary>
+        /// Creates password hash.
+        /// </summary>
+        /// <param name="password">The password.</param>
+        /// <param name="passwordHash">The password hash.</param>
+        /// <exception cref="CustomBusinessException"></exception>
         public static void CreatePasswordHash(this string password, out string passwordHash)
         {
             if (password == null)
@@ -22,6 +37,13 @@ namespace CurrencyApiInfrastructure.Extensions
             passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password, hashType: HashType.SHA384);
         }
 
+        /// <summary>
+        /// Verifies password hash.
+        /// </summary>
+        /// <param name="password">The password.</param>
+        /// <param name="passwordHash">The password hash.</param>
+        /// <exception cref="CustomBusinessException"></exception>
+        /// <returns>A bool</returns>
         public static bool VerifyPasswordHash(this string password, string passwordHash)
         {
             if (password == null)

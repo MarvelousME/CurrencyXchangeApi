@@ -8,15 +8,31 @@ using System.Threading.Tasks;
 
 namespace CurrencyApiDomain.Triggers
 {
+    /// <summary>
+    /// The table base trigger.
+    /// </summary>
     public class TableBaseTrigger : IBeforeSaveTrigger<TableBase>
     {
+        /// <summary>
+        /// The data context.
+        /// </summary>
         private readonly AppDbContext _dataContext;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TableBaseTrigger"/> class.
+        /// </summary>
+        /// <param name="dataContext">The data context.</param>
         public TableBaseTrigger(AppDbContext dataContext)
         {
             _dataContext = dataContext;
         }
 
+        /// <summary>
+        /// Before the save.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task</returns>
         public Task BeforeSave(ITriggerContext<TableBase> context, CancellationToken cancellationToken)
         {
             if (context.ChangeType is ChangeType.Added)

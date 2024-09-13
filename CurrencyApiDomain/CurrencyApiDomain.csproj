@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <None Remove="Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Configurations\BooksConfiguration.cs" />
     <Compile Remove="Configurations\MembersConfiguration.cs" />
     <Compile Remove="Configurations\RolesConfiguration.cs" />
@@ -15,12 +21,6 @@
     <Compile Remove="Repositories\MemberRolesRepo.cs" />
     <Compile Remove="Repositories\MembersRepo.cs" />
     <Compile Remove="Repositories\RolesRepo.cs" />
-    <Compile Remove="Seeds\ActiveBookReservationsSeed.cs" />
-    <Compile Remove="Seeds\BookReservationHistoriesSeed.cs" />
-    <Compile Remove="Seeds\BooksSeed.cs" />
-    <Compile Remove="Seeds\MemberRolesSeed.cs" />
-    <Compile Remove="Seeds\MembersSeed.cs" />
-    <Compile Remove="Seeds\RolesSeed.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,11 +28,6 @@
     <PackageReference Include="EntityFrameworkCore.Triggers" Version="1.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-    <Folder Include="Seeds\" />
   </ItemGroup>
 
   <ItemGroup>

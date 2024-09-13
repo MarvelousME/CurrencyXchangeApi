@@ -17,10 +17,12 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((hostContext, loggerConfiguration) =>
-{
-    loggerConfiguration.ReadFrom.Configuration(builder.Configuration);
-});
+builder.Host
+    .UseSerilog(
+        (hostContext, loggerConfiguration) =>
+        {
+            loggerConfiguration.ReadFrom.Configuration(builder.Configuration);
+        });
 
 var configuration = builder.Configuration;
 
@@ -40,11 +42,14 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<MapsterMapping>();
 
 builder.Services.AddRangeCustomServices(appSetting);
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    options.JsonSerializerOptions.WriteIndented = true;
-});
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(
+        options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            options.JsonSerializerOptions.WriteIndented = true;
+        });
 
 builder.Services.AddCustomSwaggerConfiguration();
 
@@ -67,8 +72,8 @@ app.UseRequestLocalization();
 
 app.UseStaticHttpContext();
 
-app.UseCors(opts =>
-        opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("Content-Disposition")
+app.UseCors(
+    opts => opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("Content-Disposition")
 );
 
 app.UseCustomGlobalExceptionHandler(app.Services.GetService<IStringLocalizer<SharedResource>>());

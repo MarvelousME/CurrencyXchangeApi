@@ -3,6 +3,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace CurrencyApiLib.Swagger;
 
+/// <summary>
+/// The accept language header swagger attribute.
+/// </summary>
 public class AcceptLanguageHeaderSwaggerAttribute : IOperationFilter
 {
 
