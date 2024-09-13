@@ -14,6 +14,9 @@ using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Localization;
 using Serilog;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +28,23 @@ builder.Host
         });
 
 var configuration = builder.Configuration;
+
+//builder.Services.Configure<MyRateLimitOptions>(
+//    builder.Configuration.GetSection(MyRateLimitOptions.MyRateLimit));
+
+//Rate limiting of requests
+builder.Services.AddRateLimiter(_ => _
+    .AddFixedWindowLimiter(policyName: "fixed", options =>
+    {
+        options.PermitLimit = 4;
+        options.Window = TimeSpan.FromSeconds(12);
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        options.QueueLimit = 2;
+    }));
+
+//var myOptions = new MyRateLimitOptions();
+//builder.Configuration.GetSection(MyRateLimitOptions.MyRateLimit).Bind(myOptions);
+//var fixedPolicy = "fixed";
 
 builder.Services.Configure<AppSetting>(configuration);
 var appSetting = configuration.Get<AppSetting>();
@@ -65,6 +85,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CurrencyApi v1"));
 }
+
+app.UseRateLimiter();
+//static string GetTicks() => (DateTime.Now.Ticks & 0x11111).ToString("00000");
+
+//app.MapGet("/", () => Results.Ok($"Fixed Window Limiter {GetTicks()}"))
+//                           .RequireRateLimiting(fixedPolicy);
 
 app.UseSerilogRequestLogging();
 
