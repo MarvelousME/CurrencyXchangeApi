@@ -10,6 +10,7 @@ Implemented a CLEAN style approach without Mediator and CQRS patterns.
    ![image](https://github.com/user-attachments/assets/ef25a91c-6ce3-42e6-b577-02d9d072406f)
 
 3. Installation of Redis Cache (Make sure that the Redis server is running)
+   
 Step 1. Download the Redis Server using the following URL.
 
 https://github.com/microsoftarchive/redis/releases/tag/win-3.0.504
